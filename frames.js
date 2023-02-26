@@ -1,40 +1,54 @@
-class Frame {
+class Frames {
   constructor() {
-    this.allFrames = [[]];
-    this.singleFrame = 0;
     this.scoreCard = 0;
+    this.singleFrame = [];
+    this.allFrames = [];
+    this.bonusScore = 0;
+    this.strike = false;
+    this.spare = false;
   }
-
-  strike(pins1, pins2) {
-    if (pins1 === 10) {
-      this.scorecard += 10;
-      firstRoll();
-    } else if (pins2 === 10) {
-      this.scoreCard += pins1 + pins2;
-      secondRoll();
+  roll(pins) {
+    if (this.allFrames.length == 10) {
+      if (this.strike == true) {
+        this.scoreCard += pins + pins;
+        this.allFrames[9].push(pins);
+        this.strike = false;
+      } else if (this.spare == true) {
+        this.scorecard += pins;
+        this.allFrames[9].push(pins);
+        this.spare = true;
+      }
+    } else if (this.singleFrame[0]) {
+      this.singleFrame.push(pins);
+      this.allFrames.push(this.singleFrame);
+      this.scoreCard += this.singleFrame[1];
+      if (this.strike == true) {
+        this.scoreCard += this.singleFrame[1];
+      }
+      if (this.singleFrame[0] + pins == 10) {
+        this.spare = true;
+      }
+      this.singleFrame = [];
+      this.strike = false;
+    } else {
+      this.singleFrame.push(pins);
+      this.scoreCard += this.singleFrame[0];
+      if (this.strike == true || this.spare == true) {
+        this.scoreCard += this.singleFrame[0];
+      }
+      this.spare = false;
+      if (pins == 10) {
+        this.strike = true;
+        this.allFrames.push([10, 0]);
+        this.singleFrame = [];
+      }
     }
-  }
-
-  spare(pins1, pins2) {
-    if (pins1 + pins2 === 10) {
-      this.scoreCard += pins1 + pins2;
-      firstRoll();
-    }
-  }
-
-  firstRoll(pins) {
-    if (pins === 10) {
-      this.singleFrame.push(10);
-      this.singleFrame.push(0);
-    } else this.singleFrame.push(pins);
-    return pins;
-  }
-
-  secondRoll(pins) {
-    this.singleFrame.push(pins);
-    this.allFrames.push(this.singleFrame);
-    return pins;
+    console.log("Scorecard", this.scoreCard);
+    console.log("Strike", this.strike);
+    console.log("Spare", this.spare);
+    console.log("singleFrame", this.singleFrame);
+    console.log("allFrames", this.allFrames);
   }
 }
 
-module.exports = Frame;
+module.exports = Frames;
