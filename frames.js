@@ -14,7 +14,7 @@ class Frames {
         this.allFrames[9].push(pins);
         this.strike = false;
       } else if (this.spare == true) {
-        this.scorecard += pins;
+        this.scoreCard += pins;
         this.allFrames[9].push(pins);
         this.spare = true;
       }
